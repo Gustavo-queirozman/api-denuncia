@@ -24,6 +24,11 @@ class Resposta extends Model
 
     public function denuncia()
 {
-    return $this->belongsTo(Denuncia::class, 'denuncias_id'); 
+    return $this->belongsTo(Denuncia::class, 'denuncias_id');
 }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'users_id');
+    }
 }
