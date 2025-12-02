@@ -1,0 +1,40 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class ModifyPasswordRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'token' => 'required|exists:password_reset_tokens:token',
+            'id' => 'required',
+            'new_password' => 'required',
+        ];
+    }
+    
+    public function messages(): array
+    {
+        return [
+            'token.required' => 'É obrigatório o campo token.',
+            'token.exists' =>  'Token inválido.',
+            'id.required' => 'É obrigatório o campo id.',
+            'new_password.required' => 'É obrigatório o campo new_password.'
+        ];
+    }
+}

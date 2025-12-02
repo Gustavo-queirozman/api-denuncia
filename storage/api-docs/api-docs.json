@@ -1,0 +1,1297 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API de Denúncias",
+        "description": "Documentação da API para gerenciamento de denúncias.",
+        "contact": {
+            "email": "suporte@seudominio.com"
+        },
+        "version": "1.0"
+    },
+    "paths": {
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Realiza login",
+                "description": "Autentica o usuário e retorna um token JWT junto com os dados do usuário.",
+                "operationId": "login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "login",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "login": {
+                                        "type": "string",
+                                        "example": "gustavo.queiroz"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "12345678"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login realizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9..."
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Gustavo Queiroz"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Usuário logado com sucesso!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuário ou senha incorretos"
+                    }
+                }
+            }
+        },
+        "/api/denuncia/{id}": {
+            "post": {
+                "tags": [
+                    "Denúncias"
+                ],
+                "summary": "Atualiza o status de uma denúncia",
+                "description": "Atualiza o status de uma denúncia com base no ID",
+                "operationId": "updateDenunciaStatus",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da denúncia",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "status_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Operação realizada com sucesso!"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "protocolo": {
+                                                    "type": "string",
+                                                    "example": "20250213170258650"
+                                                },
+                                                "user_status": {
+                                                    "type": "integer",
+                                                    "example": 6
+                                                },
+                                                "departamentos_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "status_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "denuncia": {
+                                                    "type": "string",
+                                                    "example": "gustavo"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "example": "2025-02-13T17:14:59.000000Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "example": "2025-02-16T12:57:24.000000Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro ao processar a solicitação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro na requisição"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/denuncias": {
+            "get": {
+                "tags": [
+                    "Denúncias"
+                ],
+                "summary": "Lista todas as denúncias disponíveis",
+                "description": "Retorna a lista de denúncias disponíveis para o usuário requisitante. Caso não existam denúncias disponíveis, retorna um erro 404.",
+                "operationId": "getDenuncias",
+                "responses": {
+                    "200": {
+                        "description": "Lista de denúncias retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Operação realizada com sucesso!"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "protocolo": {
+                                                        "type": "string",
+                                                        "example": "20250213150250265"
+                                                    },
+                                                    "user_status": {
+                                                        "type": "integer",
+                                                        "example": 6
+                                                    },
+                                                    "departamentos_id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "status_id": {
+                                                        "type": "integer",
+                                                        "example": 2
+                                                    },
+                                                    "denuncia": {
+                                                        "type": "string",
+                                                        "example": "Descrição da denúncia"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-02-13T15:02:50.000000Z"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-02-16T03:30:06.000000Z"
+                                                    },
+                                                    "anexos": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Nenhuma denúncia encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Nenhuma denúncia encontrada para o seu departamento."
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": null
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/denuncia": {
+            "get": {
+                "tags": [
+                    "Denúncias"
+                ],
+                "summary": "Mostra a denúncia",
+                "description": "Mostra a denúncia e retorna os detalhes da denúncia registrada.",
+                "operationId": "denuncia",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "protocolo"
+                                ],
+                                "properties": {
+                                    "protocolo": {
+                                        "type": "string",
+                                        "example": "20250213150250265"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Denúncia registrada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Operação realizada com sucesso!"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "protocolo": {
+                                                    "type": "string",
+                                                    "example": "20250213150250265"
+                                                },
+                                                "user_status": {
+                                                    "type": "string",
+                                                    "example": "6"
+                                                },
+                                                "departamentos_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "status_id": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "denuncia": {
+                                                    "type": "string",
+                                                    "example": "gustavo"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-02-13T15:02:50.000000Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-02-16T03:30:06.000000Z"
+                                                },
+                                                "anexos": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação - Campos obrigatórios ausentes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro de validação"
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "protocolo": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Obrigatório campo protocolo."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/resposta": {
+            "post": {
+                "tags": [
+                    "Respostas"
+                ],
+                "summary": "Adicionar uma resposta à denúncia",
+                "description": "Adiciona uma nova resposta associada a uma denúncia pelo protocolo",
+                "operationId": "addResposta",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "protocolo": {
+                                        "type": "string",
+                                        "example": "20250213150250265"
+                                    },
+                                    "resposta": {
+                                        "type": "string",
+                                        "example": "asdasdasd asdsad assda as asdas asdsa assa asdssa assa assa"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Operação realizada com sucesso!"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "users_id": {
+                                                    "type": "integer",
+                                                    "example": 6
+                                                },
+                                                "denuncias_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "resposta": {
+                                                    "type": "string",
+                                                    "example": "asdasdasd asdsad assda as asdas asdsa assa asdssa assa assa"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "example": "2025-02-17T00:24:57.000000Z"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "example": "2025-02-17T00:24:57.000000Z"
+                                                },
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 16
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro ao processar a solicitação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro na requisição"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/respostas": {
+            "get": {
+                "tags": [
+                    "Respostas"
+                ],
+                "summary": "Obter respostas de uma denúncia",
+                "description": "Retorna as respostas associadas a uma denúncia pelo protocolo",
+                "operationId": "getRespostasByProtocolo",
+                "parameters": [
+                    {
+                        "name": "protocolo",
+                        "in": "query",
+                        "description": "Protocolo da denúncia",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "20250213150250265"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Operação realizada com sucesso!"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "protocolo": {
+                                                    "type": "string",
+                                                    "example": "20250213150250265"
+                                                },
+                                                "user_status": {
+                                                    "type": "string",
+                                                    "example": "6"
+                                                },
+                                                "departamentos_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "status_id": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "denuncia": {
+                                                    "type": "string",
+                                                    "example": "gustavo"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "example": "2025-02-13T15:02:50.000000Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "example": "2025-02-16T03:30:06.000000Z"
+                                                },
+                                                "respostas": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "denuncias_id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "resposta": {
+                                                                "type": "string",
+                                                                "example": "asdasdasd asdsad assda as asdas asdsa assa asdssa assa assa"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro ao processar a solicitação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro na requisição"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Registra um novo usuário",
+                "description": "Cria um novo usuário e retorna um token de autenticação junto com os dados do usuário.",
+                "operationId": "register",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "login",
+                                    "departamentos_id"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Daniel Queiroz"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "daniel.queiroz@email.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "12345678"
+                                    },
+                                    "login": {
+                                        "type": "string",
+                                        "example": "daniel.queiroz"
+                                    },
+                                    "departamentos_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Usuário registrado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Operação realizada com sucesso!"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9..."
+                                                },
+                                                "user": {
+                                                    "type": "string",
+                                                    "example": "dd.queiroz"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação - Campos obrigatórios ausentes ou já cadastrados",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro de validação"
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "email": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Obrigatório campo email."
+                                                    }
+                                                },
+                                                "password": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Obrigatório campo password."
+                                                    }
+                                                },
+                                                "name": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Obrigatório campo name."
+                                                    }
+                                                },
+                                                "login": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Obrigatório campo login."
+                                                    }
+                                                },
+                                                "departamentos_id": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Obrigatório campo departamentos_id."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/usuario/{id}": {
+            "post": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Atualiza um usuário.",
+                "description": "Atualiza os dados de um usuário específico com base no ID fornecido.",
+                "operationId": "Usuario/EditarController",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do usuário a ser atualizado",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 6
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "is_admin",
+                                    "enable",
+                                    "departamentos_id"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Gustavo-kljkjkj"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "gggg@unimednoroesteminas.coop.br"
+                                    },
+                                    "is_admin": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "enable": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "departamentos_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Usuário atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Operação realizada com sucesso!"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 6
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Gustavo-kljkjkj"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "format": "email",
+                                                    "example": "gggg@unimednoroesteminas.coop.br"
+                                                },
+                                                "is_admin": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "enable": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "departamentos_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-02-16T13:31:15.000000Z"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-02-14T14:18:28.000000Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação - Campos obrigatórios ausentes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro de validação"
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "name": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Obrigatório campo name."
+                                                    }
+                                                },
+                                                "email": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Obrigatório campo email."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Usuário não encontrado."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/usuario": {
+            "get": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Exibe o usuário que está logado.",
+                "description": "Retorna os detalhes de um usuário.",
+                "operationId": "getUser",
+                "responses": {
+                    "200": {
+                        "description": "Usuário encontrado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Operação realizada com sucesso!"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 6
+                                                },
+                                                "login": {
+                                                    "type": "string",
+                                                    "example": "teste2.queiroz"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "gggg@unimednoroesteminas.coop.br"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Gustavo-kljkjkj"
+                                                },
+                                                "is_admin": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "enable": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "departamentos_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-02-16T13:31:15.000000Z"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-02-14T14:18:28.000000Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Usuário não encontrado"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Cria um novo usuário",
+                "description": "Cria um novo usuário e retorna os dados cadastrados.",
+                "operationId": "Usuario/ExcluirController",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": 10
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Usuário criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Operação realizada com sucesso!"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 10
+                                                },
+                                                "login": {
+                                                    "type": "string",
+                                                    "example": "dd.queiroz"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "format": "email",
+                                                    "example": "dd@dsd.coop.br"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Gustavo Queiroz"
+                                                },
+                                                "is_admin": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "enable": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "departamentos_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-02-15T21:43:22.000000Z"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-02-15T21:43:22.000000Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação - Campos obrigatórios ausentes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro de validação"
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Obrigatório campo id."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/usuarios": {
+            "get": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Lista todos os usuários registrados",
+                "description": "Retorna uma lista de todos os usuários cadastrados no sistema.",
+                "operationId": "Usuario/ListarController",
+                "responses": {
+                    "200": {
+                        "description": "Lista de usuários retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Operação realizada com sucesso!"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 2
+                                                    },
+                                                    "login": {
+                                                        "type": "string",
+                                                        "example": "gustavo.queiroz"
+                                                    },
+                                                    "email": {
+                                                        "type": "string",
+                                                        "example": "suporteti3@unimednoroesteminas.coop.br"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Gustavodd Queiroz"
+                                                    },
+                                                    "is_admin": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "enable": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "departamentos_id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-02-16T03:27:16.000000Z"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-02-13T11:44:10.000000Z"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Usuários",
+            "description": "Usuários"
+        },
+        {
+            "name": "Denúncias",
+            "description": "Denúncias"
+        },
+        {
+            "name": "Respostas",
+            "description": "Respostas"
+        }
+    ]
+}
