@@ -25,20 +25,3 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
-Route::post('login', [AuthController::class, 'login'])/*->name('login')*/;
-Route::post('register', CriarUsuarioController::class );
-Route::post('forgot', [AuthController::class, 'forgot']);
-Route::post('reset', [AuthController::class, 'reset']);
-//rotas abaixo para acesso administrativo
-Route::get('usuarios', ListarUsuarioController::class);
-Route::post('usuario/{id}', EditarUsuarioController::class);
-Route::post('usuario', ExcluirUsuarioController::class);
-Route::get('usuario', MostrarUsuarioController::class);
-Route::get('denuncias', ListarDenunciaController::class);
-Route::post('denuncia/{id}', EditarDenunciaController::class);
-
-Route::post('denuncia', CriarDenunciaController::class);
-Route::get('denuncia', MostrarDenunciaController::class);
-Route::get('respostas', ListarRespostaController::class);
-Route::post('resposta', CriarRespostaController::class);
