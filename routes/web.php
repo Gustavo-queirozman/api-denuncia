@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Denuncia\CriarController AS CriarDenunciaController;
@@ -16,7 +17,6 @@ use App\Http\Controllers\Usuario\MostrarController AS MostrarUsuarioController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,19 +26,24 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider and all of them will
 | be assigned to the "web" middleware group. Make something great!
 |
-
+*/
 
 Route::get('/', function () {
     return view('welcome');
 });
-*/
 
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::post('login', [AuthController::class, 'login'])/*->name('login')*/;
-Route::post('register', CriarUsuarioController::class );
-Route::post('forgot', [AuthController::class, 'forgot']);
-Route::post('reset', [AuthController::class, 'reset']);
-//rotas abaixo para acesso administrativo
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';
+
 Route::get('usuarios', ListarUsuarioController::class);
 Route::post('usuario/{id}', EditarUsuarioController::class);
 Route::post('usuario', ExcluirUsuarioController::class);
